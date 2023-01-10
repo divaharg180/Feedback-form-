@@ -1,0 +1,164 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>feedback</title>
+</head>
+<style>
+    body{
+        background-color: orchid;
+        align-items: center;
+    
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+    }
+    header{
+        margin-top: 10px;
+    }
+    form{
+        align-items: center;
+        background-color: blueviolet;
+        padding: 20px;
+        width: auto;
+       margin-top: 40px;
+       display: inline-block;
+       
+    }
+    form 
+    input,textarea{
+           padding: 5px 100px;
+
+    }
+    form button{
+        padding:5px 10px;
+    }
+    form label{
+        display: flex;
+        align-items: center;
+
+    }
+    .d-flex{
+        display: flex;
+    }
+</style>
+
+<body>
+    <header>Feedback Form</header>
+<form name="feedBack">
+  <div class="fullName">
+        <input id="nameType" name="fullName" type="text" placeholder="enter ur name" required>
+  </div>  
+
+  <div class="d-flex" >
+    <div class="d-flex">
+        <input id="tsup" name="option" type="radio" value="" required>
+        <label for="tsup">Genaral </label>
+  </div>  
+  <div class="d-flex">
+        <input id="gfeed" name="option" type="radio" value="" required>
+        <label for="gfeed">tech supp </label>
+  </div>  
+  <div class="d-flex">
+        <input id="contribut" name="option" type="radio" value="" required>
+        <label for="contribut">contributions </label>
+ </div> 
+
+  </div>
+  <div>
+    <input id="emailid" type="email" name="emailId" value="" placeholder="abcd@fg.com" required>
+</div> 
+<div>
+    <textarea name="description" placeholder="enter your feedback !" rows="6" required></textarea>
+</div>
+<div>
+    <label for="checkbox">
+        <input name="checkbox" type="checkbox" value="true" id="checkbox" required >
+        Accept
+    </label>
+</div>
+<div>
+    <button>submit</button>
+</div>
+</form>
+<script>
+
+const formEl = document.forms.feedBack;
+const btnEl = document.getElementById("checkbox");
+// console.log(btnEl);
+
+//get elements------
+// // const fullNameEl = formEl.elements[0];           // opt 1 calling   <----
+//     const fullNameEl = formEl.elements.fullName;   // opt 2 calling  <----
+// // const optionEl = formEl.elements[1];
+//      const optionEl=  formEl.elements.option;
+// // const emailIdEl = formEl.elements[4];
+//      const emailIdEl = formEl.elements.emailId;
+// // const textAreaEl = formEl.elements[5];
+//      const textAreaEl= formEl.elements.description;
+// // const checkBoxEl = formEl.elements[6];
+//      const checkBoxEl = formEl.elements.checkbox;
+
+const { fullName , option , emailId , description , checkbox } = formEl.elements;  //opt 3 calling   <-----object destructing
+//  console.log(fullName , option , emailId , description , checkbox);
+const handleSubmit =(e) => {
+e.preventDefault();
+const formData = new FormData(formEl);  //to allign data format
+
+                     // //to send data to server----->
+ 
+//1.(i) querystring  ----> fullName%2CMari%20George = 0&option%2C = 1&emailId%2Chamamu%40mailinator.com = 2&description%2CEnim%20molestiae%20et%20do = 3&key%2Cabcdefgh = 4&hobbies%2Ccricket%2Cbooks%2Csongs = 5
+const data = [...formData.entries()];
+   // const dataString = data.map((x) => 
+   //`${encodeURIComponent(x[0])} = ${encodeURIComponent(x[1])}`).join('&');   //--opt 1  <--- old way
+   const dataString = data.map((key,value) => 
+   `${encodeURIComponent(key)} = ${encodeURIComponent(value)}`).join('&');   //---opt 2  <---old way
+    console.log("DATA STRING 1",dataString);
+
+// (ii) URLSearchParams() -->fullName=Dai+Williams&option=&emailId=sabaviv%40mailinator.com&description=Consequuntur+eum+aut&key=abcdefgh&hobbies=cricket%2Cbooks%2Csongs
+  const dataString2 = new URLSearchParams(formData).toString(); // ---new way query string
+  console.log("DATA STRING 2",dataString2);
+
+
+// 2.JSON
+     const jsonData = JSON.stringify(Object.fromEntries(formData));
+     console.log("JSONBODY",jsonData);
+};
+
+const handleFormData = (e) => {
+    console.log("formdata fired !");
+
+    const formData = e.formData;
+
+    // prototype method
+    formData.append( "key" , "abcdefgh");
+console.log([...formData.entries()]);
+// console.log([...formData.values()]); 
+// console.log(formData.get("emailId"));  
+// console.log(formData.getAll("description"));
+// console.log(formData.has("emailId")); 
+// console.log([...formData.keys()]); 
+// set data
+formData.set("hobbies","cricket,books,songs");  
+ console.log([...formData.values()]); //call for hobbies
+ localStorage.setItem('inputValue', JSON.stringify([...formData]));
+
+// delete data
+formData.delete("checkbox");
+console.log([...formData.values()]); //call for delete
+
+ console.log(formData);
+
+}
+
+formEl.addEventListener( "submit", handleSubmit );
+ 
+formEl.addEventListener("formdata", handleFormData);
+
+
+
+</script>
+</body>
+</html>
